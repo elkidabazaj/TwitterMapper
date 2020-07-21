@@ -50,44 +50,38 @@ public class Parser {
     }
 
     private Filter expr() throws SyntaxError {
-        return orexpr();
+        return orExpression();
     }
 
-    private Filter orexpr() throws SyntaxError {
-        Filter sub = andexpr();
+    private Filter orExpression() throws SyntaxError {
+        Filter sub = andExpression();
         String token = scanner.peek();
         while (token != null && token.equals(OR)) {
             scanner.advance();
-            Filter right = andexpr();
-            // At this point we have two subexpressions ("sub" on the left and "right" on the right)
-            // that are to be connected by "or"
-            // TODO: Construct the appropriate new Filter object
-            // The new filter object should be assigned to the variable "sub"
+            Filter right = andExpression();
+            sub = new OrFilter(sub, right);
             token = scanner.peek();
         }
         return sub;
     }
 
-    private Filter andexpr() throws SyntaxError {
-        Filter sub = notexpr();
+    private Filter andExpression() throws SyntaxError {
+        Filter sub = notExpression();
         String token = scanner.peek();
         while (token != null && token.equals(AND)) {
             scanner.advance();
-            Filter right = notexpr();
-            // At this point we have two subexpressions ("sub" on the left and "right" on the right)
-            // that are to be connected by "and"
-            // TODO: Construct the appropriate new Filter object
-            // The new filter object should be assigned to the variable "sub"
+            Filter right = notExpression();
+            sub = new AndFilter(sub, right);
             token = scanner.peek();
         }
         return sub;
     }
 
-    private Filter notexpr() throws SyntaxError {
+    private Filter notExpression() throws SyntaxError {
         String token = scanner.peek();
         if (token.equals(NOT)) {
             scanner.advance();
-            Filter sub = notexpr();
+            Filter sub = notExpression();
             return new NotFilter(sub);
         } else {
             Filter sub = prim();

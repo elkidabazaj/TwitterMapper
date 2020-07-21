@@ -26,6 +26,6 @@ public class OrFilter implements Filter{
 
     @Override
     public String toString() {
-        return firstChild.toString() + " or " + secondChild.toString();
+        return "(" + firstChild.toString() + " or " + secondChild.toString() + ")";
     }
 }

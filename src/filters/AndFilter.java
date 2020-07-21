@@ -26,6 +26,6 @@ public class AndFilter implements Filter {
 
     @Override
     public String toString() {
-        return firstChild.toString() + " and " + secondChild.toString();
+        return "(" + firstChild.toString() + " and " + secondChild.toString() + ")";
     }
 }
