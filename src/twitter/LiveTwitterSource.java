@@ -46,8 +46,8 @@ public class LiveTwitterSource extends TwitterSource {
         ConfigurationBuilder cb = new ConfigurationBuilder();
         cb.setOAuthConsumerKey("dB2HRCrZK9oKs88tm6FnOpcDc")
                 .setOAuthConsumerSecret("b8LKCZpr7fSyK62uUxvBQ6syASmtlHoNtVl3EhlS6O31JTFPeV")
-                .setOAuthAccessToken("AAAAAAAAAAAAAAAAAAAAAHxnGAEAAAAATtb4%2FBikUpCPP5OriULj5Ft1ZhU%3DaSFzmEeuPiIxYx8oHLfa8iVcnPWwkgaxRs0MSKUCi010nCrgu7")
-                .setOAuthAccessTokenSecret("3204939767-Lsk4cZYkqK3RSNX19FySh6m0JCRmPeUfHpA4hGH");
+                .setOAuthAccessToken("3204939767-G0BfsVogqd9Tg3CuA9CEKKk0wHVOpRaieEt35cu")
+                .setOAuthAccessTokenSecret("9gor9Xr1dIcafuyu6btKBqwWkCFL0ybPHQRhcFTCGANnH");
 
         // Pass the ConfigurationBuilder in when constructing TwitterStreamFactory.
         twitterStream = new TwitterStreamFactory(cb.build()).getInstance();
