@@ -19,8 +19,8 @@ public class BasicFilter implements Filter {
     }
 
     @Override
-    public boolean matches(Status s) {
-        String text = s.getText();
+    public boolean matches(Status status) {
+        String text = status.getText();
         return pattern.matcher(text).matches();
     }
 
