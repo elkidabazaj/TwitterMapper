@@ -5,6 +5,8 @@ import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
 import org.openstreetmap.gui.jmapviewer.Layer;
 import twitter4j.Status;
+import twitter4j.User;
+import ui.CustomMapMarker;
 import ui.MapMarkerSimple;
 import util.Util;
 
@@ -30,6 +32,8 @@ public class Query implements Observer {
     private final Filter filter;
     // The checkBox in the UI corresponding to this query (so we can turn it on and off and delete it)
     private JCheckBox checkBox;
+
+    private CustomMapMarker customMapMarker;
 
     public Color getColor() {
         return color;
@@ -74,6 +78,7 @@ public class Query implements Observer {
      */
     public void terminate() {
         layer.setVisible(false);
+        map.removeMapMarker(customMapMarker);
     }
 
     @Override
@@ -81,7 +86,11 @@ public class Query implements Observer {
         Status status = (Status) obj;
         if (filter.matches(status)) {
             Coordinate coordinate = Util.statusCoordinate(status);
-            map.addMapMarker(new MapMarkerSimple(layer, coordinate));
+            User user = status.getUser();
+            String profilePicURL = user.getProfileImageURL();
+            String tweet = status.getText();
+            customMapMarker = new CustomMapMarker(getLayer(), coordinate, getColor(), profilePicURL, tweet);
+            map.addMapMarker(customMapMarker);
         }
     }
 }

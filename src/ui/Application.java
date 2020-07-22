@@ -8,7 +8,6 @@ import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
 import org.openstreetmap.gui.jmapviewer.tilesources.BingAerialTileSource;
 import query.Query;
 import twitter.LiveTwitterSource;
-import twitter.PlaybackTwitterSource;
 import twitter.TwitterSource;
 import util.SphericalGeometry;
 
