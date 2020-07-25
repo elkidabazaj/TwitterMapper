@@ -1,4 +1,4 @@
-package ui;
+package ui.marker;
 
 
 import org.openstreetmap.gui.jmapviewer.Coordinate;
@@ -11,24 +11,24 @@ import java.awt.image.BufferedImage;
 
 public class CustomMapMarker extends MapMarkerCircle {
     public static final double defaultMarkerSize = 17.0;
-    public BufferedImage profilePic;
+    public BufferedImage profileImage;
     public String tweet;
-    public String profilePicURL;
-    public CustomMapMarker(Layer layer, Coordinate coordinate, Color color, String profilePicURL, String tweet) {
+    public String profileImageFromUrl;
+    public CustomMapMarker(Layer layer, Coordinate coordinate, Color color, String profileImageFromUrl, String tweet) {
         super(layer, null, coordinate, defaultMarkerSize, STYLE.FIXED, getDefaultStyle());
         setColor(Color.BLACK);
         setBackColor(color);
-        profilePic = Util.imageFromURL(profilePicURL);
+        profileImage = Util.imageFromURL(profileImageFromUrl);
         this.tweet = tweet;
-        this.profilePicURL = profilePicURL;
+        this.profileImageFromUrl = profileImageFromUrl;
     }
 
     public String getTweet() {
         return this.tweet;
     }
 
-    public String getProfilePicURL() {
-        return this.profilePicURL;
+    public String getProfileImageFromUrl() {
+        return this.profileImageFromUrl;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class CustomMapMarker extends MapMarkerCircle {
             graphics2D.setPaint(this.getBackColor());
             graphics2D.fillOval(position.x - radius, position.y - radius, size, size);
             graphics2D.setComposite(oldComposite);
-            graphics2D.drawImage(profilePic, position.x - 10, position.y - 10, 20,20,null);
+            graphics2D.drawImage(profileImage, position.x - 10, position.y - 10, 20,20,null);
         }
     }
 }

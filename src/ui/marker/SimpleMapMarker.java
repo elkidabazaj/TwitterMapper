@@ -1,4 +1,4 @@
-package ui;
+package ui.marker;
 
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.Layer;
