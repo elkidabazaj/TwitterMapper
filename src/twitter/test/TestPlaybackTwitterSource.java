@@ -2,12 +2,8 @@ package twitter.test;
 
 import org.junit.jupiter.api.Test;
 import twitter.PlaybackTwitterSource;
-import twitter4j.Status;
 
-import java.util.HashSet;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -21,17 +17,27 @@ public class TestPlaybackTwitterSource {
         PlaybackTwitterSource source = new PlaybackTwitterSource(1.0);
         TestObserver testObserver = new TestObserver();
         source.addObserver(testObserver);
+        testPlaybackSourceWithSingleTerm(source, testObserver);
+        testPlaybackSourceWithTwoTerms(source, testObserver);
+    }
+
+    private void testPlaybackSourceWithSingleTerm(PlaybackTwitterSource source, TestObserver testObserver) {
         source.setFilterTerms(set("food"));
         pause(3 * 1000);
-        assertTrue(testObserver.getNTweets() > 0, "Expected getNTweets() testObserver be > 0, was " + testObserver.getNTweets());
-        assertTrue(testObserver.getNTweets() <= 10, "Expected getNTweets() testObserver be <= 10, was " + testObserver.getNTweets());
+        int nTweets = testObserver.getNTweets();
+        assertTrue(nTweets > 0, "Expected getNTweets() testObserver be > 0, was " + nTweets);
+        assertTrue(nTweets <= 10, "Expected getNTweets() testObserver be <= 10, was " + nTweets);
+    }
+
+    private void testPlaybackSourceWithTwoTerms(PlaybackTwitterSource source, TestObserver testObserver) {
         int firstBunch = testObserver.getNTweets();
         System.out.println("Now adding 'the'");
         source.setFilterTerms(set("food", "the"));
         pause(3 * 1000);
-        assertTrue(testObserver.getNTweets() > 0, "Expected getNTweets() testObserver be > 0, was " + testObserver.getNTweets());
-        assertTrue(testObserver.getNTweets() > firstBunch, "Expected getNTweets() testObserver be < firstBunch (" + firstBunch + "), was " + testObserver.getNTweets());
-        assertTrue(testObserver.getNTweets() <= 10, "Expected getNTweets() testObserver be <= 10, was " + testObserver.getNTweets());
+        int nTweets = testObserver.getNTweets();
+        assertTrue(nTweets > 0, "Expected getNTweets() testObserver be > 0, was " + nTweets);
+        assertTrue(nTweets > firstBunch, "Expected getNTweets() testObserver be < firstBunch (" + firstBunch + "), was " + nTweets);
+        assertTrue(nTweets <= 10, "Expected getNTweets() testObserver be <= 10, was " + nTweets);
     }
 
     private void pause(int millis) {
@@ -42,23 +48,22 @@ public class TestPlaybackTwitterSource {
         }
     }
 
-    private <E> Set<E> set(E ... p) {
+    @SafeVarargs
+    private final <E> Set<E> set(E... p) {
         Set<E> ans = new HashSet<>();
-        for (E a : p) {
-            ans.add(a);
-        }
+        Collections.addAll(ans, p);
         return ans;
     }
-    private class TestObserver implements Observer {
+
+    private static class TestObserver implements Observer {
         private int nTweets = 0;
 
         @Override
         public void update(Observable o, Object arg) {
-            Status s = (Status) arg;
             nTweets ++;
         }
 
-        public int getNTweets() {
+        private int getNTweets() {
             return nTweets;
         }
     }

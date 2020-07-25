@@ -20,8 +20,7 @@ public class BasicFilter implements Filter {
 
     @Override
     public boolean matches(Status status) {
-        String text = status.getText();
-        return pattern.matcher(text).matches();
+        return pattern.matcher(status.getText()).matches();
     }
 
     @Override

@@ -42,6 +42,6 @@ public class Scanner {
      */
     public String advance() {
         tokens.remove(0);
-        return tokens.size() > 0 ? tokens.get(0) : null;
+        return peek();
     }
 }

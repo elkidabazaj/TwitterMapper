@@ -10,7 +10,7 @@ import query.Query;
 import twitter.LiveTwitterSource;
 import twitter.PlaybackTwitterSource;
 import twitter.TwitterSource;
-import util.SphericalGeometry;
+import util.Util;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,24 +25,20 @@ import java.util.Timer;
  * Derived from a JMapViewer demo program written by Jan Peter Stotz
  */
 public class Application extends JFrame {
-    // The content panel, which contains the entire UI
     private final ContentPanel contentPanel;
-    // The provider of the tiles for the map, we use the Bing source
     private BingAerialTileSource bing;
-    // All of the active queries
     private List<Query> queries = new ArrayList<>();
-    // The source of tweets, a TwitterSource, either live or playback
     private TwitterSource twitterSource;
 
     private void initialize() {
         // To use the live twitter stream, use the following line
-//         twitterSource = new LiveTwitterSource();
+         twitterSource = new LiveTwitterSource();
 
         // To use the recorded twitter stream, use the following line
         // The number passed to the constructor is a speedup value:
         //  1.0 - play back at the recorded speed
         //  2.0 - play back twice as fast
-        twitterSource = new PlaybackTwitterSource(60.0);
+//        twitterSource = new PlaybackTwitterSource(60.0);
 
         queries = new ArrayList<>();
     }
@@ -89,15 +85,17 @@ public class Application extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
+        //todo grupoji ne nje metode te vetme
+
         // Always have map markers showing.
         map().setMapMarkerVisible(true);
         // Always have zoom controls showing,
         // and allow scrolling of the map around the edge of the world.
         map().setZoomContolsVisible(true);
         map().setScrollWrapEnabled(true);
-
         // Use the Bing tile provider
         map().setTileSource(bing);
+
 
         //NOTE This is so that the map eventually loads the tiles once Bing attribution is ready.
         Coordinate coord = new Coordinate(0, 0);
@@ -139,7 +137,7 @@ public class Application extends JFrame {
     private double pixelWidth(Point p) {
         ICoordinate center = map().getPosition(p);
         ICoordinate edge = map().getPosition(new Point(p.x + 1, p.y));
-        return SphericalGeometry.distanceBetween(center, edge);
+        return Util.distanceBetween(center, edge);
     }
 
     // Get those layers (of tweet markers) that are visible because their corresponding query is enabled
@@ -159,7 +157,7 @@ public class Application extends JFrame {
         Set<Layer> visibleLayers = getVisibleLayers();
         for (MapMarker m : map().getMapMarkerList()) {
             if (!visibleLayers.contains(m.getLayer())) continue;
-            double distance = SphericalGeometry.distanceBetween(m.getCoordinate(), pos);
+            double distance = Util.distanceBetween(m.getCoordinate(), pos);
             if (distance < m.getRadius() * pixelWidth) {
                 ans.add(m);
             }

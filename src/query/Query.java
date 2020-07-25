@@ -7,7 +7,6 @@ import org.openstreetmap.gui.jmapviewer.Layer;
 import twitter4j.Status;
 import twitter4j.User;
 import ui.CustomMapMarker;
-import ui.MapMarkerSimple;
 import util.Util;
 
 import javax.swing.*;
@@ -88,6 +87,7 @@ public class Query implements Observer {
             Coordinate coordinate = Util.statusCoordinate(status);
             User user = status.getUser();
             String profilePicURL = user.getProfileImageURL();
+            System.out.println("1." + profilePicURL);
             String tweet = status.getText();
             customMapMarker = new CustomMapMarker(getLayer(), coordinate, getColor(), profilePicURL, tweet);
             map.addMapMarker(customMapMarker);

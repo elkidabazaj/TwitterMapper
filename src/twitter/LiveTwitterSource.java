@@ -1,7 +1,6 @@
 package twitter;
 
 import twitter4j.*;
-import twitter4j.conf.ConfigurationBuilder;
 
 /**
  * Encapsulates the connection to Twitter
@@ -20,20 +19,22 @@ public class LiveTwitterSource extends TwitterSource {
 
     protected void sync() {
         FilterQuery filter = new FilterQuery();
-        // https://stackoverflow.com/questions/21383345/using-multiple-threads-to-get-data-from-twitter-using-twitter4j
         String[] queriesArray = terms.toArray(new String[0]);
         filter.track(queriesArray);
 
-        System.out.println("Syncing live Twitter stream with " + terms);
+        logSync();
 
         twitterStream.filter(filter);
+    }
+
+    private void logSync() {
+        System.out.println("Syncing live Twitter stream with " + terms);
     }
 
     private void initializeListener() {
         listener = new StatusAdapter() {
             @Override
             public void onStatus(Status status) {
-                // This method is called each time a tweet is delivered by the twitter API
                 if (status.getPlace() != null) {
                     handleTweet(status);
                 }
@@ -41,16 +42,8 @@ public class LiveTwitterSource extends TwitterSource {
         };
     }
 
-    // Create ConfigurationBuilder and pass in necessary credentials to authorize properly, then create TwitterStream.
     private void initializeTwitterStream() {
-        ConfigurationBuilder cb = new ConfigurationBuilder();
-        cb.setOAuthConsumerKey("dB2HRCrZK9oKs88tm6FnOpcDc")
-                .setOAuthConsumerSecret("b8LKCZpr7fSyK62uUxvBQ6syASmtlHoNtVl3EhlS6O31JTFPeV")
-                .setOAuthAccessToken("3204939767-G0BfsVogqd9Tg3CuA9CEKKk0wHVOpRaieEt35cu")
-                .setOAuthAccessTokenSecret("9gor9Xr1dIcafuyu6btKBqwWkCFL0ybPHQRhcFTCGANnH");
-
-        // Pass the ConfigurationBuilder in when constructing TwitterStreamFactory.
-        twitterStream = new TwitterStreamFactory(cb.build()).getInstance();
+        twitterStream = new TwitterStreamFactory(ConfigurationManager.getDefaultConfiguration()).getInstance();
         initializeListener();
         twitterStream.addListener(listener);
     }

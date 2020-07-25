@@ -31,8 +31,8 @@ package filters;
  */
 public class Parser {
     private final Scanner scanner;
-    private static final String LPAREN = "(";
-    private static final String RPAREN = ")";
+    private static final String LEFT_PARENTHESIS = "(";
+    private static final String RIGHT_PARENTHESIS = ")";
     private static final String OR = "or";
     private static final String AND = "and";
     private static final String NOT = "not";
@@ -41,19 +41,15 @@ public class Parser {
         scanner = new Scanner(input);
     }
 
-    public Filter parse() throws SyntaxError {
-        Filter ans = expr();
+    public Filter parse() throws FailedSyntaxException {
+        Filter answer = orExpression();
         if (scanner.peek() != null) {
-            throw new SyntaxError("Extra stuff at end of input");
+            throw new FailedSyntaxException("Extra stuff at end of input");
         }
-        return ans;
+        return answer;
     }
 
-    private Filter expr() throws SyntaxError {
-        return orExpression();
-    }
-
-    private Filter orExpression() throws SyntaxError {
+    private Filter orExpression() throws FailedSyntaxException {
         Filter sub = andExpression();
         String token = scanner.peek();
         while (token != null && token.equals(OR)) {
@@ -65,7 +61,7 @@ public class Parser {
         return sub;
     }
 
-    private Filter andExpression() throws SyntaxError {
+    private Filter andExpression() throws FailedSyntaxException {
         Filter sub = notExpression();
         String token = scanner.peek();
         while (token != null && token.equals(AND)) {
@@ -77,32 +73,32 @@ public class Parser {
         return sub;
     }
 
-    private Filter notExpression() throws SyntaxError {
+    private Filter notExpression() throws FailedSyntaxException {
         String token = scanner.peek();
         if (token.equals(NOT)) {
             scanner.advance();
             Filter sub = notExpression();
             return new NotFilter(sub);
-        } else {
-            Filter sub = prim();
-            return sub;
         }
+        return prim();
+
     }
 
-    private Filter prim() throws SyntaxError {
+    private Filter prim() throws FailedSyntaxException {
         String token = scanner.peek();
-        if (token.equals(LPAREN)) {
+        if (token.equals(LEFT_PARENTHESIS)) {
             scanner.advance();
-            Filter sub = expr();
-            if (!scanner.peek().equals(RPAREN)) {
-                throw new SyntaxError("Expected ')'");
+            Filter sub = orExpression();
+            if (!scanner.peek().equals(RIGHT_PARENTHESIS)) {
+                throw new FailedSyntaxException("Expected ')'");
             }
             scanner.advance();
             return sub;
-        } else {
-            Filter sub = new BasicFilter(token);
-            scanner.advance();
-            return sub;
         }
+
+        Filter sub = new BasicFilter(token);
+        scanner.advance();
+        return sub;
+
     }
 }

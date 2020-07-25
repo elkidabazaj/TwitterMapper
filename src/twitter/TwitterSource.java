@@ -8,22 +8,24 @@ import java.util.*;
 
 public abstract class TwitterSource extends Observable {
     protected boolean doLogging = true;
-    // The set of terms to look for in the stream of tweets
     protected Set<String> terms = new HashSet<>();
 
-    // Called each time a new set of filter terms has been established
     abstract protected void sync();
 
-    protected void log(Status status) {
+    protected void storeImageToCache(Status status) {
+        ImageCache.getInstance().storeImageToCache(status.getUser().getProfileImageURL());
         if (doLogging) {
-            System.out.println(status.getUser().getName() + ": " + status.getText());
+            printStatusLog(status);
         }
-        ImageCache.getInstance().loadImage(status.getUser().getProfileImageURL());
     }
 
-    public void setFilterTerms(Collection<String> newterms) {
+    protected void printStatusLog(Status status) {
+        System.out.println(status.getUser().getName() + ": " + status.getText());
+    }
+
+    public void setFilterTerms(Collection<String> newTerms) {
         terms.clear();
-        terms.addAll(newterms);
+        terms.addAll(newTerms);
         sync();
     }
 

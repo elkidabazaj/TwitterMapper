@@ -4,11 +4,11 @@ import query.Query;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Random;
+
+import static javax.swing.BoxLayout.*;
 
 /**
  * A UI panel for entering new queries.
@@ -26,7 +26,7 @@ public class NewQueryPanel extends JPanel {
 
         random = new Random();
 
-        setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
+        setLayout(new BoxLayout(this, Y_AXIS));
 
         queryLabel.setLabelFor(newQuery);
         GridBagConstraints c = new GridBagConstraints();
@@ -51,6 +51,7 @@ public class NewQueryPanel extends JPanel {
         c.gridy = 1;
         c.gridx = 0;
         add(colorLabel, c);
+
         c.gridwidth = GridBagConstraints.REMAINDER;
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 1;
@@ -70,13 +71,10 @@ public class NewQueryPanel extends JPanel {
                         BorderFactory.createTitledBorder("New Search"),
                         BorderFactory.createEmptyBorder(5,5,5,5)));
 
-        addQueryButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!newQuery.getText().equals("")) {
-                    addQuery(newQuery.getText().toLowerCase());
-                    newQuery.setText("");
-                }
+        addQueryButton.addActionListener(e -> {
+            if (!newQuery.getText().equals("")) {
+                addQuery(newQuery.getText().toLowerCase());
+                newQuery.setText("");
             }
         });
 

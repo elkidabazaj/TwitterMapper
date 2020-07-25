@@ -27,14 +27,13 @@ public class TestScanner {
 
     @Test
     public void testAll() {
-        String expected[] = { "trump", "and", "(", "evil",
-                "or", "not", "(", "good", ")", ")" };
+        String[] expected = { "trump", "and", "(", "evil", "or", "not", "(", "good", ")", ")" };
         runTest("trump and (evil or not (good))", expected);
     }
 
     @Test
     public void testOr() {
-        String expected[] = { "trump", "or", "evil" };
+        String[] expected = { "trump", "or", "evil" };
         runTest("trump or evil", expected);
     }
 
