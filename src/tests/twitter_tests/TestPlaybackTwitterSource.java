@@ -1,4 +1,4 @@
-package twitter.test;
+package tests.twitter_tests;
 
 import org.junit.jupiter.api.Test;
 import twitter.PlaybackTwitterSource;

@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,11 +18,12 @@ public class ImageCache {
     private static final ImageCache INSTANCE = new ImageCache();
     private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
     private BufferedImage defaultImage;
-    private Map<String, BufferedImage> cache;
+
+    private Map<String, BufferedImage> imageCache;
     private Map<String, String> pathCache;
 
     private ImageCache() {
-        cache = new HashMap<>();
+        imageCache = new HashMap<>();
         pathCache = new HashMap<>();
     }
 
@@ -30,27 +32,24 @@ public class ImageCache {
     }
 
     public BufferedImage loadImage(String url) {
-        BufferedImage imageFromCache = cache.get(url);
+        BufferedImage imageFromCache = imageCache.get(url);
         if (imageFromCache == null) {
             imageFromCache = Util.imageFromURL(url);
-            cache.put(url, imageFromCache);
+            imageCache.put(url, imageFromCache);
         }
         return imageFromCache;
     }
 
     public void storeImageToCache(String url) {
-//        BufferedImage imageFromCache = cache.get(url);
-        if (!cache.containsKey(url)) {
-//            cache.put(url, defaultImage);
+        if (!imageCache.containsKey(url)) {
             Thread t = new Thread(() -> {
                 BufferedImage imageFromURL = Util.imageFromURL(url);
-                SwingUtilities.invokeLater(() -> cache.put(url, imageFromURL));
+                SwingUtilities.invokeLater(() -> imageCache.put(url, imageFromURL));
             });
             t.run();
         }
     }
 
-    private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
     public static String bytesToHex(byte[] bytes) {
         char[] hexChars = new char[bytes.length * 2];
         for (int j = 0; j < bytes.length; j++) {
@@ -108,5 +107,10 @@ public class ImageCache {
 
     public BufferedImage getDefaultImage() {
         return defaultImage;
+    }
+
+    //todo just for testing purposes; it should me unmodifiable
+    public Map<String, BufferedImage> getImageCache() {
+        return imageCache;
     }
 }

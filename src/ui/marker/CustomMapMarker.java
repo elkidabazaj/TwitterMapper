@@ -36,11 +36,11 @@ public class CustomMapMarker extends MapMarkerCircle {
         int size = radius * 2;
         if (graphics instanceof Graphics2D && this.getColor() != null) {
             Graphics2D graphics2D = (Graphics2D) graphics;
-            Composite oldComposite = graphics2D.getComposite();
+            Composite graphicComposite = graphics2D.getComposite();
             graphics2D.setComposite(AlphaComposite.getInstance(3));
             graphics2D.setPaint(this.getBackColor());
             graphics2D.fillOval(position.x - radius, position.y - radius, size, size);
-            graphics2D.setComposite(oldComposite);
+            graphics2D.setComposite(graphicComposite);
             graphics2D.drawImage(profileImage, position.x - 10, position.y - 10, 20,20,null);
         }
     }

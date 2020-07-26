@@ -1,4 +1,4 @@
-package filters.test;
+package tests;
 
 import twitter4j.*;
 
@@ -6,9 +6,11 @@ import java.util.Date;
 
 public class MockStatus implements Status {
     private String text;
+    private Place place;
 
     public MockStatus(String text) {
         this.text = text;
+        this.place = new MockPlace();
     }
 
     @Override
@@ -58,7 +60,7 @@ public class MockStatus implements Status {
 
     @Override
     public Place getPlace() {
-        return null;
+        return place;
     }
 
     @Override

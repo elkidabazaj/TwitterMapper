@@ -103,13 +103,13 @@ public class Application extends JFrame {
      * @param   query   The new query object
      */
     public void addQuery(Query query) {
-        queryManager.addQueryToContentPanel(query, contentPanel);
+        queryManager.addQuery(query, contentPanel);
     }
 
     private double pixelWidth(Point p) {
         ICoordinate center = map().getPosition(p);
         ICoordinate edge = map().getPosition(new Point(p.x + 1, p.y));
-        return Util.distanceBetween(center, edge);
+        return Util.calculateDistanceBetweenTwoCoordinates(center, edge);
     }
 
     private Set<Layer> getVisibleLayers() {
@@ -127,7 +127,7 @@ public class Application extends JFrame {
             if (!visibleLayers.contains(m.getLayer())) {
                 continue;
             }
-            double distance = Util.distanceBetween(m.getCoordinate(), pos);
+            double distance = Util.calculateDistanceBetweenTwoCoordinates(m.getCoordinate(), pos);
             if (distance < m.getRadius() * pixelWidth) {
                 mapMarkerList.add(m);
             }
@@ -137,13 +137,6 @@ public class Application extends JFrame {
 
     public JMapViewer map() {
         return contentPanel.getViewer();
-    }
-
-    /**
-     * @param args Application program arguments (which are ignored)
-     */
-    public static void main(String[] args) {
-        new Application().setVisible(true);
     }
 
     public void updateVisibility() {

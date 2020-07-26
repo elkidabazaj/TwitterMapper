@@ -37,11 +37,19 @@ public class QueryManager {
      * A new query has been entered via the User Interface
      * @param   query   The new query object
      */
-    public void addQueryToContentPanel(Query query, ContentPanel contentPanel) {
-        queryList.add(query);
+    public void addQuery(Query query, ContentPanel contentPanel) {
+        addQueryToList(query);
         twitterSource.setFilterTerms(getQueryTerms());
-        contentPanel.addQueryToPanel(query);
+        addQueryToContentPanel(query, contentPanel);
         twitterSource.addObserver(query);
+    }
+
+    private void addQueryToList(Query query) {
+        queryList.add(query);
+    }
+
+    private void addQueryToContentPanel(Query query, ContentPanel contentPanel) {
+        contentPanel.addQueryToPanel(query);
     }
 
     /**

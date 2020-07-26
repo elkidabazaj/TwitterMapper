@@ -9,34 +9,55 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
-import java.util.AbstractMap;
-import java.util.Map;
 
 /**
  * Helpful methods that don't clearly fit anywhere else.
  */
 public class Util {
     private static final int EARTH_RADIUS = 6371000;   // radius of earth in metres
-    private static BufferedImage defaultImage = imageFromURL("http://png-2.findicons.com/files/icons/1995/web_application/48/smiley.png");
+    private static BufferedImage defaultImage;
 
-    public static GeoLocation statusLocation(Status status) {
-        return new GeoLocation(getStatusLatitudeLongitudePair(status).getKey(), getStatusLatitudeLongitudePair(status).getValue());
+    static {
+        defaultImage = imageFromURL("https://vignette.wikia.nocookie.net/mlp/images/d/d1/Rarity_standing_S1E19_CROPPED.png");
     }
 
-    private static Map.Entry<Double, Double> getStatusLatitudeLongitudePair(Status status) {
-        GeoLocation bottomRight = status.getPlace().getBoundingBoxCoordinates()[0][0];
-        GeoLocation topLeft = status.getPlace().getBoundingBoxCoordinates()[0][2];
-        double newLat = (bottomRight.getLatitude() + topLeft.getLatitude())/2;
-        double newLon = (bottomRight.getLongitude() + topLeft.getLongitude())/2;
-        return new AbstractMap.SimpleEntry<>(newLat, newLon);
+    public static GeoLocation getStatusLocation(Status status) {
+        return new GeoLocation(getStatusLatitude(status), getStatusLongitude(status));
     }
 
-    public static Coordinate GeoLocationToCoordinate(GeoLocation loc) {
-        return new Coordinate(loc.getLatitude(), loc.getLongitude());
+    private static double getStatusLatitude(Status status) {
+        try {
+            GeoLocation bottomRight = getBoundingBoxCoordinates(status)[0][0];
+            GeoLocation topLeft = getBoundingBoxCoordinates(status)[0][2];
+            return (bottomRight.getLatitude() + topLeft.getLatitude()) / 2;
+        } catch (Exception e) {
+            return 0d;
+        }
     }
 
-    public static Coordinate statusCoordinate(Status status) {
-        return new Coordinate(getStatusLatitudeLongitudePair(status).getKey(), getStatusLatitudeLongitudePair(status).getValue());
+    private static GeoLocation[][] getBoundingBoxCoordinates(Status status) {
+        return status.getPlace().getBoundingBoxCoordinates();
+    }
+
+    private static double getStatusLongitude(Status status) {
+        try {
+            GeoLocation bottomRight = getBoundingBoxCoordinates(status)[0][0];
+            GeoLocation topLeft = getBoundingBoxCoordinates(status)[0][2];
+            return (bottomRight.getLongitude() + topLeft.getLongitude()) / 2;
+        } catch (Exception e) {
+            return 0d;
+        }
+    }
+
+    public static Coordinate getGeoLocationToCoordinate(GeoLocation location) {
+        if (location != null) {
+            return new Coordinate(location.getLatitude(), location.getLongitude());
+        }
+        return new Coordinate(0, 0);
+    }
+
+    public static Coordinate getStatusCoordinate(Status status) {
+        return new Coordinate(getStatusLatitude(status), getStatusLongitude(status));
     }
 
     /**
@@ -46,7 +67,7 @@ public class Util {
      * @param p2  second point
      * @return distance between p1 and p2 in metres
      */
-    public static double distanceBetween(ICoordinate p1, ICoordinate p2) {
+    public static double calculateDistanceBetweenTwoCoordinates(ICoordinate p1, ICoordinate p2) {
         double lat1 = p1.getLat() / 180.0 * Math.PI;
         double lat2 = p2.getLat() / 180.0 * Math.PI;
         double deltaLon = (p2.getLon() - p1.getLon()) / 180.0 * Math.PI;
@@ -63,7 +84,9 @@ public class Util {
     public static BufferedImage imageFromURL(String url) {
         try {
             BufferedImage img = ImageIO.read(new URL(url));
-            if (img == null) return defaultImage;
+            if (img == null) {
+                return defaultImage;
+            }
             return img;
         } catch (IOException e) {
             return defaultImage;

@@ -1,5 +1,6 @@
 package query;
 
+import filters.BasicFilter;
 import filters.Filter;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
@@ -26,6 +27,17 @@ public class Query implements Observer {
     private JCheckBox checkBox;
 
     private CustomMapMarker customMapMarker;
+
+    /*
+    * JUST FOR TESTING
+    * */
+    public Query() {
+        this.map = new JMapViewer();
+        this.color = Color.BLACK;
+        this.layer = new Layer("");
+        this.queryString = "";
+        this.filter = new BasicFilter("");
+    }
 
     public Query(String queryString, Color color, JMapViewer map) {
         this.queryString = queryString;
@@ -79,7 +91,7 @@ public class Query implements Observer {
     public void update(Observable observable, Object obj) {
         Status status = (Status) obj;
         if (filter.matches(status)) {
-            Coordinate coordinate = Util.statusCoordinate(status);
+            Coordinate coordinate = Util.getStatusCoordinate(status);
             User user = status.getUser();
             customMapMarker = new CustomMapMarker(getLayer(), coordinate, getColor(), user.getProfileImageURL(), status.getText());
             map.addMapMarker(customMapMarker);

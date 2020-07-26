@@ -1,4 +1,4 @@
-package filters.test;
+package tests.filter_tests;
 
 import filters.Scanner;
 import org.junit.jupiter.api.Test;
@@ -23,6 +23,12 @@ public class TestScanner {
         assertTrue(x.advance().equals("evil"));
         assertTrue(x.peek().equals("evil"));
         assertTrue(x.advance() == null);
+    }
+
+    @Test
+    public void testNot() {
+        String[] expected = { "not", "that", "easy"};
+        runTest("not that easy", expected);
     }
 
     @Test
