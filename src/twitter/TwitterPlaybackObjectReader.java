@@ -6,14 +6,13 @@ import util.ObjectReader;
 public abstract class TwitterPlaybackObjectReader extends Thread {
     private ObjectReader source;
     private double speedup;
-    private long initialDelay = 1000;
     private long playbackStartTime;
     private long recordStartTime;
 
     public TwitterPlaybackObjectReader(ObjectReader source, double speedup) {
         this.source = source;
         this.speedup = speedup;
-        this.playbackStartTime = System.currentTimeMillis() + initialDelay;
+        this.playbackStartTime = System.currentTimeMillis() + 1000;
     }
 
     public void run() {

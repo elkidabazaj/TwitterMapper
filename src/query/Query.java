@@ -1,10 +1,10 @@
 package query;
 
-import filters.BasicFilter;
 import filters.Filter;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
 import org.openstreetmap.gui.jmapviewer.Layer;
+import org.openstreetmap.gui.jmapviewer.MapMarkerCircle;
 import twitter4j.Status;
 import twitter4j.User;
 import ui.marker.CustomMapMarker;
@@ -12,6 +12,8 @@ import util.Util;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -26,20 +28,17 @@ public class Query implements Observer {
     private final Filter filter;
     private JCheckBox checkBox;
 
-    private CustomMapMarker customMapMarker;
+    private List<MapMarkerCircle> customMapMarkerList;
 
     /*
     * JUST FOR TESTING
     * */
     public Query() {
-        this.map = new JMapViewer();
-        this.color = Color.BLACK;
-        this.layer = new Layer("");
-        this.queryString = "";
-        this.filter = new BasicFilter("");
+        this("not a test", Color.BLACK, new JMapViewer());
     }
 
     public Query(String queryString, Color color, JMapViewer map) {
+        this.customMapMarkerList = new ArrayList<>();
         this.queryString = queryString;
         this.filter = Filter.parse(queryString);
         this.color = color;
@@ -83,19 +82,26 @@ public class Query implements Observer {
     }
 
     public void terminate() {
-        layer.setVisible(false);
-        map.removeMapMarker(customMapMarker);
+        for (MapMarkerCircle mapMarker : customMapMarkerList) {
+            map.removeMapMarker(mapMarker);
+        }
     }
 
     @Override
     public void update(Observable observable, Object obj) {
         Status status = (Status) obj;
         if (filter.matches(status)) {
-            Coordinate coordinate = Util.getStatusCoordinate(status);
-            User user = status.getUser();
-            customMapMarker = new CustomMapMarker(getLayer(), coordinate, getColor(), user.getProfileImageURL(), status.getText());
-            map.addMapMarker(customMapMarker);
+            MapMarkerCircle mapMarker = getCustomMapMarker(status);
+            customMapMarkerList.add(mapMarker);
+            map.addMapMarker(mapMarker);
         }
+    }
+
+    private MapMarkerCircle getCustomMapMarker(Status status) {
+        Coordinate coordinate = Util.getStatusCoordinate(status);
+        User user = status.getUser();
+        String profileImageURL = user.getProfileImageURL();
+        return new CustomMapMarker(getLayer(), coordinate, getColor(), profileImageURL, status.getText());
     }
 }
 
