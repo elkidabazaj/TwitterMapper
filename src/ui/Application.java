@@ -8,7 +8,7 @@ import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
 import org.openstreetmap.gui.jmapviewer.tilesources.BingAerialTileSource;
 import query.Query;
 import query.QueryManager;
-import ui.marker.CustomMapMarker;
+import ui.markers.CustomMapMarker;
 import ui.panels.ContentPanel;
 import util.Util;
 

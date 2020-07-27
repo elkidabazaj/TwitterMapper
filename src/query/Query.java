@@ -7,7 +7,7 @@ import org.openstreetmap.gui.jmapviewer.Layer;
 import org.openstreetmap.gui.jmapviewer.MapMarkerCircle;
 import twitter4j.Status;
 import twitter4j.User;
-import ui.marker.CustomMapMarker;
+import ui.markers.CustomMapMarker;
 import util.Util;
 
 import javax.swing.*;
