@@ -17,7 +17,6 @@ import java.util.Map;
 public class ImageCache {
     private static final ImageCache INSTANCE = new ImageCache();
     private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
-    private BufferedImage defaultImage;
 
     private Map<String, BufferedImage> imageCache;
     private Map<String, String> pathCache;
@@ -103,10 +102,6 @@ public class ImageCache {
     public String saveImage(String url) {
         String path = hashURL(url);
         return saveImage(loadImage(url), path);
-    }
-
-    public BufferedImage getDefaultImage() {
-        return defaultImage;
     }
 
     //todo just for testing purposes; it should me unmodifiable

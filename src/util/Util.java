@@ -15,7 +15,7 @@ import java.net.URL;
  */
 public class Util {
     private static final int EARTH_RADIUS = 6371000;   // radius of earth in metres
-    private static BufferedImage defaultImage;
+    public static BufferedImage defaultImage;
 
     static {
         defaultImage = imageFromURL("https://vignette.wikia.nocookie.net/mlp/images/d/d1/Rarity_standing_S1E19_CROPPED.png");

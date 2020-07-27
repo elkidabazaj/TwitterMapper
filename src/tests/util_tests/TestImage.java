@@ -52,6 +52,7 @@ public class TestImage {
 
         testStoreExistingImageToCache(imageCache);
         testStoreNewImageToCache(imageCache);
+        imageCache.getImageCache().clear();
     }
 
     /*
